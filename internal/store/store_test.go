@@ -2557,3 +2557,28 @@ func TestCreateSessionPartialUpsert(t *testing.T) {
 		}
 	})
 }
+
+func TestTruncateUTF8(t *testing.T) {
+	tests := []struct {
+		name string
+		in   string
+		max  int
+		want string
+	}{
+		{name: "short ascii", in: "abc", max: 10, want: "abc"},
+		{name: "exact length", in: "hello", max: 5, want: "hello"},
+		{name: "long ascii", in: "abcdef", max: 3, want: "abc..."},
+		{name: "spanish accents", in: "Decisión de arquitectura", max: 8, want: "Decisión..."},
+		{name: "emoji", in: "🐛🔧🚀✨🎉💡", max: 3, want: "🐛🔧🚀..."},
+		{name: "mixed ascii and multibyte", in: "café☕latte", max: 5, want: "café☕..."},
+	}
+
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			got := truncate(tc.in, tc.max)
+			if got != tc.want {
+				t.Fatalf("truncate(%q, %d) = %q, want %q", tc.in, tc.max, got, tc.want)
+			}
+		})
+	}
+}

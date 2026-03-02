@@ -270,6 +270,16 @@ func TestHelperArgsAndTruncate(t *testing.T) {
 	if got := truncate("this is long", 4); got != "this..." {
 		t.Fatalf("unexpected truncate for long input: %q", got)
 	}
+	// Multibyte UTF-8 safety
+	if got := truncate("Decisión de arquitectura", 8); got != "Decisión..." {
+		t.Fatalf("truncate spanish accents = %q, want %q", got, "Decisión...")
+	}
+	if got := truncate("🐛🔧🚀✨🎉💡", 3); got != "🐛🔧🚀..." {
+		t.Fatalf("truncate emoji = %q, want %q", got, "🐛🔧🚀...")
+	}
+	if got := truncate("café☕latte", 5); got != "café☕..." {
+		t.Fatalf("truncate mixed = %q, want %q", got, "café☕...")
+	}
 }
 
 func TestHandleSearchAndCRUDHandlers(t *testing.T) {

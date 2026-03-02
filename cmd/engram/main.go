@@ -779,8 +779,9 @@ func fatal(err error) {
 }
 
 func truncate(s string, max int) string {
-	if len(s) <= max {
+	runes := []rune(s)
+	if len(runes) <= max {
 		return s
 	}
-	return s[:max] + "..."
+	return string(runes[:max]) + "..."
 }

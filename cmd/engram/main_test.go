@@ -117,6 +117,9 @@ func TestTruncate(t *testing.T) {
 		{name: "short string", in: "abc", max: 10, want: "abc"},
 		{name: "exact length", in: "hello", max: 5, want: "hello"},
 		{name: "long string", in: "abcdef", max: 3, want: "abc..."},
+		{name: "spanish accents", in: "Decisión de arquitectura", max: 8, want: "Decisión..."},
+		{name: "emoji", in: "🐛🔧🚀✨🎉💡", max: 3, want: "🐛🔧🚀..."},
+		{name: "mixed ascii and multibyte", in: "café☕latte", max: 5, want: "café☕..."},
 	}
 
 	for _, tc := range tests {

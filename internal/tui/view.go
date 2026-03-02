@@ -695,8 +695,9 @@ func (m Model) renderObservationListItem(index int, id int64, obsType, title, co
 func truncateStr(s string, max int) string {
 	// Remove newlines for single-line display
 	s = strings.ReplaceAll(s, "\n", " ")
-	if len(s) <= max {
+	runes := []rune(s)
+	if len(runes) <= max {
 		return s
 	}
-	return s[:max] + "..."
+	return string(runes[:max]) + "..."
 }
