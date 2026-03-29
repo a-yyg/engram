@@ -1,6 +1,8 @@
 { lib
 , buildGoModule
 , buildGo125Module ? null
+, makeWrapper
+, jq
 , version ? "dev"
 }:
 
@@ -24,6 +26,13 @@ goBuilder rec {
   env.CGO_ENABLED = 0;
 
   vendorHash = "sha256-5nSAU7L2Xv9dzJln47Zb6dv1YCPAXXGg6wCzNIpIn9U=";
+
+  nativeBuildInputs = [ makeWrapper ];
+
+  postInstall = ''
+    wrapProgram "$out/bin/engram" \
+      --prefix PATH : ${lib.makeBinPath [ jq ]}
+  '';
 
   # Test suite includes integration tests that expect extra services.
   doCheck = false;
